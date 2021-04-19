@@ -1,0 +1,17 @@
+{
+  "name": "wallet-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Chris Ochuko",
+  "license": "ISC",
+  "dependencies": {
+    "bip39": "^3.0.3",
+    "ethereumjs-util": "^7.0.10",
+    "hdkey": "^2.0.1"
+  }
+}
