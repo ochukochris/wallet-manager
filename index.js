@@ -63,8 +63,9 @@ const generateBtcAccounts = async (words = "", start = 0, end = 1) => {
 }
 
 (async () => {
-    // const res = await generateEthAccounts("", 0, 10)
-    const res = await generateBtcAccounts("", 0, 10)
+    const m = ""
+    const res = await generateEthAccounts(m, 0, 10)
+    // const res = await generateBtcAccounts("", 0, 10)
     console.log(res[0]);
     console.log(res[1]);
     console.log("Mnemonic:", res[2]);
