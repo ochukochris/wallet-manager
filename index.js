@@ -84,6 +84,7 @@ const generatePpcAccounts = async (words = "", start = 0, end = 1) => {
         const pubkey = bs58check.encode(step4);
 
         const wif = createPeercoinWif(addrNode._privateKey.toString('hex'));
+        console.log(wif);
         accounts.push(pubkey)
         keys.push(addrNode._privateKey.toString('hex'))
     }
@@ -92,7 +93,7 @@ const generatePpcAccounts = async (words = "", start = 0, end = 1) => {
 }
 
 (async () => {
-    const m = "omit hurdle pact improve elephant omit unusual salon fork absorb dust limit"
+    const m = ""
     // const res = await generateEthAccounts(m, 0, 10)
     // const res = await generateBtcAccounts("", 0, 10)
     const res = await generatePpcAccounts(m, 0, 1)
