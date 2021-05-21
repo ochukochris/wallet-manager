@@ -3,10 +3,12 @@ const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const createHash = require('create-hash');
 const bs58check = require('bs58check');
+const { createPeercoinWif } = require('./libs');
 
 // Variables
 const ethPath = "m/44'/60'/0'/0/"; // last param should be {account_index}
 const btcPath = "m/44'/0'/0'/0/"; // last param should be {account_index}
+const ppcPath = "m/44'/6'/0'/0/"; // last param should be {account_index}
 
 // Methods
 const generateMnemonic = () => {
@@ -62,10 +64,38 @@ const generateBtcAccounts = async (words = "", start = 0, end = 1) => {
     return [accounts, keys, mnemonic];
 }
 
+const generatePpcAccounts = async (words = "", start = 0, end = 1) => {
+    const mnemonic = words ? words : generateMnemonic();
+    const root = await getMasterKey(mnemonic);
+
+    const accounts = [];
+    const keys = [];
+    for (let index = start; index < end; index++) {
+        // creates an address node
+        const addrNode = root.derive(ppcPath + index);
+
+        const step1 = addrNode._publicKey;
+        const step2 = createHash('sha256').update(step1).digest();
+        const step3 = createHash('rmd160').update(step2).digest();
+    
+        var step4 = Buffer.allocUnsafe(21);
+        step4.writeUInt8(0x37, 0);
+        step3.copy(step4, 1) //step3 now holds the extended RIPEMD160 result
+        const pubkey = bs58check.encode(step4);
+
+        const wif = createPeercoinWif(addrNode._privateKey.toString('hex'));
+        accounts.push(pubkey)
+        keys.push(addrNode._privateKey.toString('hex'))
+    }
+
+    return [accounts, keys, mnemonic];
+}
+
 (async () => {
-    const m = ""
-    const res = await generateEthAccounts(m, 0, 10)
+    const m = "omit hurdle pact improve elephant omit unusual salon fork absorb dust limit"
+    // const res = await generateEthAccounts(m, 0, 10)
     // const res = await generateBtcAccounts("", 0, 10)
+    const res = await generatePpcAccounts(m, 0, 1)
     console.log(res[0]);
     console.log(res[1]);
     console.log("Mnemonic:", res[2]);
