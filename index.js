@@ -77,7 +77,7 @@ const generatePpcAccounts = async (words = "", start = 0, end = 1) => {
         const step1 = addrNode._publicKey;
         const step2 = createHash('sha256').update(step1).digest();
         const step3 = createHash('rmd160').update(step2).digest();
-    
+
         var step4 = Buffer.allocUnsafe(21);
         step4.writeUInt8(0x37, 0);
         step3.copy(step4, 1) //step3 now holds the extended RIPEMD160 result
@@ -92,12 +92,28 @@ const generatePpcAccounts = async (words = "", start = 0, end = 1) => {
     return [accounts, keys, mnemonic];
 }
 
+function padWithLeadingZeros(num, totalLength) {
+    return String(num).padStart(totalLength, '0');
+}
+
 (async () => {
     const m = ""
-    const res = await generateEthAccounts(m, 0, 10)
+    const res = await generateEthAccounts(m, 0, 50)
     // const res = await generateBtcAccounts("", 0, 10)
     // const res = await generatePpcAccounts(m, 0, 1)
-    console.log(res[0]);
-    console.log(res[1]);
+    const paddingZeros = 2
+    
+
+
+    res[0].map((addr, index) => {
+        console.log(`${padWithLeadingZeros(index + 1, paddingZeros)}: ${addr}`)
+    })
+
+    console.log(" ")
+
+    res[1].map((priv, index) => {
+        console.log(`${padWithLeadingZeros(index + 1, paddingZeros)}: ${priv}`)
+    })
+
     console.log("Mnemonic:", res[2]);
 })()
